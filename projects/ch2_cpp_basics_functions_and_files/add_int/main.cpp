@@ -2,15 +2,8 @@
 
 #include <iostream>
 
-int read_number() {
-    int x{};
-    std::cin >> x;
-    return x;
-}
-
-void write_answer(int answer) {
-    std::cout << answer << '\n';
-}
+int read_number();
+void write_answer(int answer);
 
 int main(void) {
     std::cout << "Enter the first integer: ";
