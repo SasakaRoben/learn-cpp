@@ -1,3 +1,4 @@
+#include "io.h"
 #include <iostream>
 
 int read_number() {

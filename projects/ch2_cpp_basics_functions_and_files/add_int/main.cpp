@@ -1,9 +1,7 @@
 // Take two integers as input from user and display their sum
 
+#include "io.h"
 #include <iostream>
-
-int read_number();
-void write_answer(int answer);
 
 int main(void) {
     std::cout << "Enter the first integer: ";
