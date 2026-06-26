@@ -7,28 +7,16 @@ private:
     double m_radius { 10.0 };
 
 public:
-    // color and radius will use default value
-    Ball() 
-    {
-        print();
-    }
-
-    // color will use default value
+    // Handles Ball(radius)
     Ball(double radius)
-        : m_radius { radius }
+        : Ball{ "black", radius } // delegate to the other constructor
     {
-        print();
+        // We don't need to call print() here since it will be called by
+        // the constructor we delegate to
     }
 
-    // radius will use default value
-    Ball(std::string_view color)
-        : m_color { color }
-    {
-        print();
-    }
-
-    // constructor with both color and radius parameters
-    Ball(std::string_view color, double radius)
+    // Handles Ball(color, radius), Ball(color), and Ball()
+    Ball(std::string_view color="black", double radius=10.0)
         : m_color { color }
         , m_radius { radius }
     {
