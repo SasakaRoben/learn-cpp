@@ -2,6 +2,8 @@
 #include <utility>
 #include <iostream>
 
+bool validate_input();
+
 template <typename T>
 std::pair<std::size_t, std::size_t> get_min_max_indices(
     const std::vector<T>& arr) {
@@ -37,26 +39,47 @@ void print_array(const std::vector<T>& arr) {
     std::cout << " ):\n";
 }
 
+std::vector<int> get_array() {
+    std::vector<int> arr {};
+
+    while (true)
+	{
+		std::cout << "Enter numbers to add (use -1 to stop): ";
+		int input {};
+		std::cin >> input;
+
+        // If we're done, break out of loop
+		if (input == -1) {
+			break;
+        }
+
+		if (!validate_input()) {
+            std::cout << "Invalid Input.\n";
+            continue;
+        }
+
+		// The user entered a valid element, so let's push it on the vector
+		arr.push_back(input);
+	}
+
+    return arr;
+}
+
 int main() {
-    std::vector v1 { 3, 8, 2, 5, 7, 8, 3 };
-    print_array(v1);
+    std::vector v1 { get_array() };
+    
+    if (v1.size() > 0) {
+        print_array(v1);
 
-    auto p1 { get_min_max_indices(v1) };
-    std::cout << "The min element has index " << p1.first 
-              << " and value " << v1[p1.first] << '\n';
-    std::cout << "The max element has index " << p1.second 
-              << " and value " << v1[p1.second] << '\n';
-
-    std::cout << '\n';
-
-    std::vector v2 { 5.5, 2.7, 3.3, 7.6, 1.2, 8.8, 6.6 };
-    print_array(v2);
-
-    auto p2 { get_min_max_indices(v2) };
-    std::cout << "The min element has index " << p2.first 
-              << " and value " << v2[p2.first] << '\n';
-    std::cout << "The max element has index " << p2.second 
-              << " and value " << v2[p2.second] << '\n';
-
+        auto p1 { get_min_max_indices(v1) };
+        std::cout << "The min element has index " << p1.first 
+                << " and value " << v1[p1.first] << '\n';
+        std::cout << "The max element has index " << p1.second 
+                << " and value " << v1[p1.second] << '\n';
+    }
+    else {
+        std::cout << "Array is empty.\n";
+    }
+    
     return 0;
 }
