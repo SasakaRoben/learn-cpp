@@ -21,6 +21,15 @@ public:
     std::string_view get_word() const { return m_word; }
 };
 
+void display_state(const Session& session) {
+    std::cout << '\n';
+    
+    std::cout << "The word: ";
+    for ([[maybe_unused]] auto c : session.get_word()) {
+        std::cout << '_';
+    }
+    std::cout << '\n';
+}
 
 int main() {
     std::cout << "Welcome to C++man (a variant of Hangman)\n";
