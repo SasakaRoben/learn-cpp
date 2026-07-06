@@ -31,13 +31,31 @@ void display_state(const Session& session) {
     std::cout << '\n';
 }
 
+char get_guesses() {
+    char input {};
+
+    while (true) {        
+        std::cout << "Enter you next letter: ";
+        std::cin >> input;
+
+        if (validate_input() && (input >= 'a' && input <= 'z'))
+            break;
+
+        std::cout << "That wasn't a valid input. Try again.\n";
+    }
+
+    return input;
+}
+
 int main() {
     std::cout << "Welcome to C++man (a variant of Hangman)\n";
     std::cout << "To win: guess the word. To lose: run out of guesses\n";
     
     Session session {};
 
-    
+    display_state(session);
+    char c { get_guesses() };
+    std::cout << "You guessed: " << c << '\n';
 
 	return 0;
 }
