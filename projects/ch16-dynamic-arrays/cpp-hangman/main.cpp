@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string_view>
 
+bool validate_input();
 namespace WorldList {
     std::vector <std::string_view> words { "mystery", "broccoli", "account", 
                                       "almost", "spaghetti", "opinion", 
@@ -12,10 +13,22 @@ namespace WorldList {
     }
 }
 
+class Session {
+private:
+    std::string_view m_word { WorldList::get_random_word() };
+
+public:
+    std::string_view get_word() const { return m_word; }
+};
+
+
 int main() {
     std::cout << "Welcome to C++man (a variant of Hangman)\n";
     std::cout << "To win: guess the word. To lose: run out of guesses\n";
-    std::cout << "The word is: " << WorldList::get_random_word() << '\n';
+    
+    Session session {};
+
+    
 
 	return 0;
 }
