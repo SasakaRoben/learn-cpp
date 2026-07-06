@@ -40,13 +40,14 @@ void display_state(const Session& session, char guess) {
     
     std::cout << "The word: ";
     for (auto c : session.get_word()) {
-        if (guess == c) {
+        if (session.is_letter_guessed(c)) {
             std::cout << c;
         }
         else {
             std::cout << '_';
         }
     }
+    
     std::cout << '\n';
 }
 
