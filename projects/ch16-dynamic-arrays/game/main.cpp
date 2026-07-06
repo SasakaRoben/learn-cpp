@@ -1,6 +1,8 @@
 #include <vector>
 #include <iostream>
 #include <cassert>
+#include <string_view>
+#include <type_traits> // for std::is_integral and std::is_enum
 
 namespace Items {
     enum Type {
