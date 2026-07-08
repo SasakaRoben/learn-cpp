@@ -128,14 +128,20 @@ int main() {
     
     Session session {};
 
-    for (int i {0}; i < 6; ++i) {
+    while (session.wrong_guesses_left() && !session.won()) {
         display_state(session);
         char c { get_guess(session) };
-        session.set_letter_guessed(c);
+        handle_guess(session, c);
     }
 
     display_state(session);
 
-
+    if (session.wrong_guesses_left()) {
+        std::cout << "You lost! The word was: " << session.get_word() << '\n';
+    }
+    else {
+        std::cout << "You won!\n";
+    }
+    
 	return 0;
 }
