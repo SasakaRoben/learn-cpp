@@ -4,6 +4,10 @@
 #include <vector>
 
 bool validate_input();
+
+namespace Settings {
+    constexpr int wrong_guesses_allowed { 6 };
+}
 namespace WorldList {
     std::vector <std::string_view> words { "mystery", "broccoli", "account", 
                                       "almost", "spaghetti", "opinion", 
@@ -18,6 +22,7 @@ class Session {
 private:
     std::string_view m_word { WorldList::get_random_word() };
     std::vector<bool> m_letter_guessed { std::vector<bool>(26) };
+    int m_wrong_guesses_left { Settings::wrong_guesses_allowed };
 
     std::size_t to_index(char c) const {
         return static_cast<std::size_t>((c % 32) - 1);
@@ -33,6 +38,9 @@ public:
     void set_letter_guessed(char c) {
         m_letter_guessed[to_index(c)] = true;
     }
+
+    int wrong_guesses_left() const { return m_wrong_guesses_left; }
+    void remove_guess() { --m_wrong_guesses_left; }
 };
 
 void display_state(const Session& session) {
@@ -46,6 +54,11 @@ void display_state(const Session& session) {
         else {
             std::cout << '_';
         }
+    }
+
+    std::cout << " Wrong guesses: ";
+    for (int i { 0 }; i < session.wrong_guesses_left(); i++) {
+        std::cout << '+';
     }
 
     std::cout << '\n';
