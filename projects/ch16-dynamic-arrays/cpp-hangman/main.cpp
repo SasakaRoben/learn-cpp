@@ -35,7 +35,7 @@ public:
     }
 };
 
-void display_state(const Session& session, char guess) {
+void display_state(const Session& session) {
     std::cout << '\n';
     
     std::cout << "The word: ";
@@ -47,18 +47,18 @@ void display_state(const Session& session, char guess) {
             std::cout << '_';
         }
     }
-    
+
     std::cout << '\n';
 }
 
-char get_guesses(Session& session) {
+char get_guess(const Session& session) {
     char input {};
 
     while (true) {        
         std::cout << "Enter you next letter: ";
         std::cin >> input;
 
-        if(session.get_seen_letters()[static_cast<std::size_t>(input % 32) - 1]) {
+        if(session.is_letter_guessed(input)) {
             std::cout << "You already guessed that. Try again.\n";
             continue;
         }
@@ -69,7 +69,6 @@ char get_guesses(Session& session) {
         std::cout << "That wasn't a valid input. Try again.\n";
     }
 
-    session.update_seen(input);
     return input;
 }
 
@@ -79,23 +78,14 @@ int main() {
     
     Session session {};
 
-    for (auto e : session.get_seen_letters()) {
-        std::cout << e << ' ';
-    }
-
-    std::cout << '\n';
-
-    
     for (int i {0}; i < 6; ++i) {
-        char c { get_guesses(session) };
-        display_state(session, c);
+        display_state(session);
+        char c { get_guess(session) };
+        session.set_letter_guessed(c);
     }
 
-    for (auto e : session.get_seen_letters()) {
-        std::cout << e << ' ';
-    }
+    display_state(session);
 
-    std::cout << '\n';
 
 	return 0;
 }
