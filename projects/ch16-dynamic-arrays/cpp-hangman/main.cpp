@@ -110,6 +110,18 @@ char get_guess(const Session& session) {
     return input;
 }
 
+void handle_guess(Session& session, char c) {
+    session.set_letter_guessed(c);
+
+    if (session.is_letter_in_word(c)) {
+        std::cout << "Yes, '" << c << "' is in the word!\n";
+        return;
+    }
+
+    std::cout << "No, '" << c << "' is not in the world!\n";
+    session.remove_guess();
+}
+
 int main() {
     std::cout << "Welcome to C++man (a variant of Hangman)\n";
     std::cout << "To win: guess the word. To lose: run out of guesses\n";
