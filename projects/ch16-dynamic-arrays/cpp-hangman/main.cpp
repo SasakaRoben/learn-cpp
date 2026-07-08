@@ -41,6 +41,15 @@ public:
 
     int wrong_guesses_left() const { return m_wrong_guesses_left; }
     void remove_guess() { --m_wrong_guesses_left; }
+
+    bool is_letter_in_word(char c) const {
+        for (auto ch : m_word) {
+            if (ch == c) {
+                return true;
+            }
+        }
+        return false;
+    }
 };
 
 void display_state(const Session& session) {
@@ -59,6 +68,12 @@ void display_state(const Session& session) {
     std::cout << " Wrong guesses: ";
     for (int i { 0 }; i < session.wrong_guesses_left(); i++) {
         std::cout << '+';
+    }
+
+    for (char c = 'a'; c <= 'z'; ++c) {
+        if (session.is_letter_guessed(c) && !session.is_letter_in_word(c)) {
+            std::cout << c;
+        }
     }
 
     std::cout << '\n';
