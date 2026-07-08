@@ -50,6 +50,16 @@ public:
         }
         return false;
     }
+
+    bool won() {
+        for (auto c : m_word) {
+            if (!is_letter_guessed(c)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 };
 
 void display_state(const Session& session) {
