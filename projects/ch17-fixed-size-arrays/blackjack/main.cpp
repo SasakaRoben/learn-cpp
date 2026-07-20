@@ -88,16 +88,60 @@ struct Player {
     int score {};
 };
 
-int main() {
-    // Print one card
-    Card card { Card::rank_5, Card::suit_heart };
-    std::cout << card << '\n';
+namespace Settings {
+    // Maximum score before losing
+    constexpr int bust { 21 };
 
-    // Print all cards
-    for (auto suit : Card::all_suits)
-        for (auto rank : Card::all_ranks)
-            std::cout << Card { rank, suit } << ' ';
-    std::cout << '\n';
+    // Minimum score that dealer has to have.
+    constexpr int dealer_stops_at { 17 };
+}
+
+// Returns true if the dealer went bust. False otherwise
+bool dealer_turn(Deck& deck, Player& dealer) {
+    while (dealer.score < Settings::dealer_stops_at) {
+        Card card { deck.deal_card() };
+        dealer.score += card.value();
+        std::cout << "The dealer flips a " << card << ". They now have: "
+                  << dealer.score << "\n";
+    }
+
+    if (dealer.score > Settings::bust) {
+        std::cout << "The dealer went bust!\n";
+        return true;
+    }
+
+    return false;
+}
+
+bool play_black_jack() {
+    Deck deck {};
+    deck.shuffle();
+
+    Player dealer { deck.deal_card().value() };
+
+    std::cout << "The dealer is showing: " << dealer.score << "\n";
+
+    Player player { deck.deal_card().value() + deck.deal_card().value() };
+
+    std::cout << "You have score: " << player.score << "\n";
+
+    if (dealer_turn(deck, dealer)) {
+        return true;
+    }
+
+    return (player.score > dealer.score);
+}
+
+int main()
+{
+    if (play_black_jack())
+    {
+        std::cout << "You win!\n";
+    }
+    else
+    {
+        std::cout << "You lose!\n";
+    }
 
     return 0;
 }
