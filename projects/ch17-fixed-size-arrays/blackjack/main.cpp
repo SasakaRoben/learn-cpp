@@ -84,6 +84,10 @@ public:
     }
 };
 
+struct Player {
+    int score {};
+};
+
 int main() {
     // Print one card
     Card card { Card::rank_5, Card::suit_heart };
