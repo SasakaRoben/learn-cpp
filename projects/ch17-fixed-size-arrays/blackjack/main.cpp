@@ -48,6 +48,11 @@ struct Card {
         out << ranks[card.rank] << suits[card.suit];
         return out;
     }
+
+    int value() const {
+        static constexpr std::array rank_values { 11, 2, 3, 4, 5, 6, 7, 8, 9, 
+                                                  10, 10, 10, 10 };
+    }
 };
 
 
