@@ -1,5 +1,6 @@
 #include <array>
 #include <iostream>
+#include <cassert>
 
 struct Card {
     enum Rank {
@@ -58,6 +59,7 @@ struct Card {
 class Deck {
 private:
     std::array<Card, 52> m_cards {};
+    std::size_t m_next_card_index { 0 };
     
 public:
     Deck() {
@@ -67,6 +69,11 @@ public:
                 m_cards[count++] = Card {rank, suit};
             }
         }
+    }
+
+    Card deal_card() {
+        assert(m_next_card_index != 52 && "Deck::deal_card ran out of cards");
+        return m_cards[m_next_card_index];
     }
 };
 
