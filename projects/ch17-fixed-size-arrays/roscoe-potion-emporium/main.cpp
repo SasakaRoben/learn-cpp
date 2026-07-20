@@ -39,3 +39,11 @@ private:
     int m_gold {};
     std::array<int, Potion::max_types> m_inventory {};
 };
+
+std::string get_name() {
+    std::cout << "Enter your name: ";
+    std::string name {};
+    std::getline(std::cin >> std::ws, name);
+    return name;
+}
+
