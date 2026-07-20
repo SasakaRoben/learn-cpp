@@ -1,6 +1,8 @@
 #include <array>
 #include <iostream>
 #include <cassert>
+#include <algorithm> // For std::shuffle
+#include "Random.h"
 
 struct Card {
     enum Rank {
@@ -69,6 +71,11 @@ public:
                 m_cards[count++] = Card {rank, suit};
             }
         }
+    }
+
+    void shuffle() {
+        std::shuffle(m_cards.begin(), m_cards.end(), Random::mt);
+        m_next_card_index = 0;
     }
 
     Card deal_card() {
