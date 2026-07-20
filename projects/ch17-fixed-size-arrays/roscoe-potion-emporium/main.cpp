@@ -50,6 +50,7 @@ public:
     } 
 
     int get_gold() const { return m_gold; }
+    int inventory(Potion::Type p) const { return m_inventory[p]; }
 };
 
 int char_num_to_int(char c) {
@@ -79,7 +80,6 @@ Potion::Type which_potion() {
     }
 }
 
-
 void shop (Player& player) {
     while(true) {
         std::cout << "Here is our selection for today:\n";
@@ -106,6 +106,20 @@ void shop (Player& player) {
     }
 }
 
+void print_inventory(Player& player) {
+    std::cout << "Your inventory contains: \n";
+
+    for (auto p : Potion::types) {
+        if(player.inventory(p) > 0) {
+            std::cout << player.inventory(p) << "x potion of " 
+                      << Potion::names[p] << "\n";
+        }
+    }
+
+    std::cout << "You escaped with " << player.get_gold() 
+              << " gold remaining\n";
+}
+
 std::string get_name() {
     std::cout << "Enter your name: ";
     std::string name {};
@@ -125,6 +139,8 @@ int main() {
     shop(player);
 
     std::cout << "\n";
+
+    print_inventory(player);
 
     std::cout << "\nThanks for shopping at Roscoe's Potion Emporium!\n";
 
