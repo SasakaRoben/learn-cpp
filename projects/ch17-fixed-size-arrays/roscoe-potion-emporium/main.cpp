@@ -29,3 +29,13 @@ void shop () {
                   << Potion::costs[p] << "\n";
     }
 }
+
+class Player {
+private:
+    static constexpr int s_min_starting_gold { 80 };
+    static constexpr int s_max_starting_gold { 120 };
+
+    std::string m_name {};
+    int m_gold {};
+    std::array<int, Potion::max_types> m_inventory {};
+};
