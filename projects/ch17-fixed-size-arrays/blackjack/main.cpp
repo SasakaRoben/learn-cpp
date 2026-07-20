@@ -55,6 +55,20 @@ struct Card {
     }
 };
 
+class Deck {
+private:
+    std::array<Card, 52> m_cards {};
+    
+public:
+    Deck() {
+        std::size_t count { 0 };
+        for (auto suit : Card::all_suits) {
+            for (auto rank : Card::all_ranks) {
+                m_cards[count++] = Card {rank, suit};
+            }
+        }
+    }
+};
 
 int main() {
     // Print one card
