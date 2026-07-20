@@ -1,6 +1,7 @@
 #include <array>
 #include <iostream>
 #include <string_view>
+#include "Random.h"
 
 namespace Potion{
     enum Type {
@@ -38,6 +39,12 @@ private:
     std::string m_name {};
     int m_gold {};
     std::array<int, Potion::max_types> m_inventory {};
+
+public:
+    explicit Player(std::string_view name):
+        m_name { name },
+        m_gold { Random::get(s_min_starting_gold, s_max_starting_gold) }
+    {}
 };
 
 std::string get_name() {
