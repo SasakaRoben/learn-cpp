@@ -4,6 +4,14 @@
 #include <algorithm> // For std::shuffle
 #include "Random.h"
 
+namespace Settings {
+    // Maximum score before losing
+    constexpr int bust { 21 };
+
+    // Minimum score that dealer has to have.
+    constexpr int dealer_stops_at { 17 };
+}
+
 struct Card {
     enum Rank {
         rank_ace,
@@ -84,28 +92,44 @@ public:
     }
 };
 
-struct Player {
-    int score {};
+class Player {
+private:
+    int m_score {};
+    int m_ace11_count { 0 }; // How many aces worth 11 points the player has
+
+public:
+    void add_to_score(Card card) {
+        m_score += card.value();
+        if (card.rank == Card::rank_ace) {
+            ++m_ace11_count; // aces start at 11 points
+        }
+        consume_aces();
+    }
+
+    // Decrease ace count by 1 
+    void consume_aces() {
+        // If the player would bust, see if we can switch aces from 11 points 
+        // to 1 point
+        while (m_score > Settings::bust && m_ace11_count > 0) {
+            m_score -= 10;
+            --m_ace11_count;
+        }
+    }
+
+    int get_score() { return m_score; }
 };
 
-namespace Settings {
-    // Maximum score before losing
-    constexpr int bust { 21 };
-
-    // Minimum score that dealer has to have.
-    constexpr int dealer_stops_at { 17 };
-}
 
 // Returns true if the dealer went bust. False otherwise
 bool dealer_turn(Deck& deck, Player& dealer) {
-    while (dealer.score < Settings::dealer_stops_at) {
+    while (dealer.get_score() < Settings::dealer_stops_at) {
         Card card { deck.deal_card() };
-        dealer.score += card.value();
+        dealer.add_to_score(card);
         std::cout << "The dealer flips a " << card << ". They now have: "
-                  << dealer.score << "\n";
+                  << dealer.get_score() << "\n";
     }
 
-    if (dealer.score > Settings::bust) {
+    if (dealer.get_score() > Settings::bust) {
         std::cout << "The dealer went bust!\n";
         return true;
     }
@@ -131,15 +155,15 @@ bool player_wants_hit() {
 
 // Returns true if the player went bust. False otherwise
 bool player_turn(Deck& deck, Player& player) {
-    while (player.score < Settings::bust && player_wants_hit()) {
+    while (player.get_score() < Settings::bust && player_wants_hit()) {
         Card card { deck.deal_card() };
-        player.score += card.value();
+        player.add_to_score(card);
 
         std::cout << "You were dealt " << card << ". You now have: "
-                  << player.score << "\n";
+                  << player.get_score() << "\n";
     }
 
-    if (player.score > Settings::bust) {
+    if (player.get_score() > Settings::bust) {
         std::cout << "You went bust!\n";
         return true;
     }
