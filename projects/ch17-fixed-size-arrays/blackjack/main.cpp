@@ -171,35 +171,60 @@ bool player_turn(Deck& deck, Player& player) {
     return false;
 }
 
-bool play_black_jack() {
+enum class GameResult {
+    player_won,
+    dealer_won,
+    tie,
+};
+
+GameResult play_black_jack() {
     Deck deck {};
     deck.shuffle();
 
-    Player dealer { deck.deal_card().value() };
+    Player dealer {};
+    Card dealer_card1 { deck.deal_card() };
+    dealer.add_to_score(dealer_card1);
 
-    std::cout << "The dealer is showing: " << dealer.score << "\n";
+    std::cout << "The dealer is showing: " << dealer_card1 << " (" 
+              << dealer.get_score() << ")\n";
 
-    Player player { deck.deal_card().value() + deck.deal_card().value() };
+    Player player {};
+    Card player_card1 { deck.deal_card() };
+    Card player_card2 { deck.deal_card() };
+    player.add_to_score(player_card1);
+    player.add_to_score(player_card2);
+    std::cout << "You are showing " << player_card1 << " " << player_card2
+              << " (" << player.get_score() << ")\n";
 
-    std::cout << "You have score: " << player.score << "\n";
-
+    // If player busted
     if (player_turn(deck, player)) {
-        return false;
+        return GameResult::dealer_won;
     }
 
+    // If dealer busted
     if (dealer_turn(deck, dealer)) {
-        return true;
+        return GameResult::player_won;
     }
 
-    return (player.score > dealer.score);
+    if (player.get_score() == dealer.get_score()) {
+        return GameResult::tie;
+    }
+
+    return (player.get_score() > dealer.get_score() ? 
+            GameResult::player_won : GameResult::dealer_won);
 }
 
 int main() {
-    if (play_black_jack()) {
-        std::cout << "You win!\n";
-    }
-    else {
-        std::cout << "You lose!\n";
+    switch (play_black_jack()) {
+        case GameResult::player_won:
+            std::cout << "You win!\n";
+            return 0;
+        case GameResult::dealer_won:
+            std::cout << "You lose!\n";
+            return 0;
+        case GameResult::tie:
+            std::cout << "It's a tie.\n";
+            return 0;
     }
 
     return 0;
