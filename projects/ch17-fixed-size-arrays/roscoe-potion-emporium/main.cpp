@@ -11,7 +11,19 @@ namespace Potion{
         max_types,
     };
 
-    constexpr std::array potion_costs { 20, 30, 12, 50 };
-    constexpr std::array<std::string_view, max_types> potion_names 
+    constexpr std::array costs { 20, 30, 12, 50 };
+    constexpr std::array types { healing, mana, speed, invisibility };
+    constexpr std::array<std::string_view, max_types> names 
     { "healing", "mana", "speed", "invisibility" };
 }
+
+void shop () {
+    std::cout << "Here is our selection for today:\n";
+
+    for (auto p : Potion::types) {
+        std::cout << p << ") " << Potion::names[p] << " costs "
+                  << Potion::costs[p] << "\n";
+    }
+}
+
+
