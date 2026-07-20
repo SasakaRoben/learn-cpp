@@ -113,6 +113,40 @@ bool dealer_turn(Deck& deck, Player& dealer) {
     return false;
 }
 
+bool player_wants_hit() {
+    while (true) {
+        std::cout << "(h) to hit, or (s) to stand: ";
+
+        char ch {};
+        std::cin >> ch;
+
+        switch(ch) {
+            case 'h':
+                return true;
+            case 's':
+                return false;
+        }
+    }
+}
+
+// Returns true if the player went bust. False otherwise
+bool player_turn(Deck& deck, Player& player) {
+    while (player.score < Settings::bust && player_wants_hit()) {
+        Card card { deck.deal_card() };
+        player.score += card.value();
+
+        std::cout << "You were dealt " << card << ". You now have: "
+                  << player.score << "\n";
+    }
+
+    if (player.score > Settings::bust) {
+        std::cout << "You went bust!\n";
+        return true;
+    }
+
+    return false;
+}
+
 bool play_black_jack() {
     Deck deck {};
     deck.shuffle();
@@ -125,6 +159,10 @@ bool play_black_jack() {
 
     std::cout << "You have score: " << player.score << "\n";
 
+    if (player_turn(deck, player)) {
+        return false;
+    }
+
     if (dealer_turn(deck, dealer)) {
         return true;
     }
@@ -132,14 +170,11 @@ bool play_black_jack() {
     return (player.score > dealer.score);
 }
 
-int main()
-{
-    if (play_black_jack())
-    {
+int main() {
+    if (play_black_jack()) {
         std::cout << "You win!\n";
     }
-    else
-    {
+    else {
         std::cout << "You lose!\n";
     }
 
