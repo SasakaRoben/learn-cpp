@@ -72,7 +72,7 @@ Potion::Type which_potion() {
 
         int val { char_num_to_int(input) };
         if (validate_input() && (val >= 0 && val < Potion::max_types)) {
-            return static_cast<Potion::Type>(input);
+            return static_cast<Potion::Type>(val);
         }
         else {
             std::cout << "Invalid input, try again: ";
