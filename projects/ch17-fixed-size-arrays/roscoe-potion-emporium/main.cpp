@@ -45,6 +45,8 @@ public:
         m_name { name },
         m_gold { Random::get(s_min_starting_gold, s_max_starting_gold) }
     {}
+
+    int get_gold() const { return m_gold; }
 };
 
 std::string get_name() {
@@ -52,5 +54,21 @@ std::string get_name() {
     std::string name {};
     std::getline(std::cin >> std::ws, name);
     return name;
+}
+
+int main() {
+    std::cout << "Welcome to Roscoe's Potion Emporium!\n";
+    std::string name { get_name() };
+
+    Player player { name };
+
+    std::cout << "Hello, " << name << ", you have " << player.get_gold() 
+              << " gold.\n\n";
+
+    shop();
+
+    std::cout << "\nThanks for shopping at Roscoe's Potion Emporium!\n";
+
+    return 0;
 }
 
