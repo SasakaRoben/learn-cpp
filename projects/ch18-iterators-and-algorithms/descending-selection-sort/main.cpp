@@ -1,6 +1,5 @@
 #include <iostream>
 #include <iterator>
-#include <iostream>
 
 int main() {
     int array[] { 30, 50, 20, 10, 40 };
