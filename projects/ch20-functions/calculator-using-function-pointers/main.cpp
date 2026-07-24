@@ -1,4 +1,5 @@
 #include <iostream>
+#include <functional>
 
 bool validate_input();
 
@@ -35,6 +36,9 @@ char get_operator() {
     }
 }
 
+// Pointer to a function that takes 2 integer parameters and returns an integer
+using ArithmeticFunction = std::function<int(int, int)>;
+
 int add(int x, int y) {
     return x + y;
 }
@@ -50,7 +54,19 @@ int multiply(int x, int y) {
 int divide(int x, int y) {
     return x / y;
 }
-    
+
+ArithmeticFunction get_arithmetic_function(char op) {
+    switch(op) {
+        case '+':
+            return add;
+        case '-':
+            return subtract;
+        case '*':
+            return multiply;
+        case '/':
+            return divide;
+    }
+}
 
 int main() {
     int x { get_integer() };
