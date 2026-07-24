@@ -56,24 +56,30 @@ int divide(int x, int y) {
 }
 
 ArithmeticFunction get_arithmetic_function(char op) {
-    switch(op) {
+    switch (op) {
         case '+':
-            return add;
+            return &add;
         case '-':
-            return subtract;
+            return &subtract;
         case '*':
-            return multiply;
+            return &multiply;
         case '/':
-            return divide;
+            return &divide;
     }
+
+    return nullptr;
 }
 
 int main() {
     int x { get_integer() };
     int y { get_integer() };
     char op { get_operator() };
+    ArithmeticFunction arithmetic_function { get_arithmetic_function(op) };
 
-    std::cout << x << y << op << "\n";
-
+    if (arithmetic_function) {
+        std::cout << x << " " << op << " " << y << " = " 
+                  << arithmetic_function(x, y) << "\n";
+    }
+    
     return 0;
 }
