@@ -97,4 +97,21 @@ void print_failure(const Numbers& numbers, int guess) {
 }
 
 int main() {
+    Numbers numbers { setup_game() };
+
+    while (true) {
+        int guess { get_user_guess() };
+
+        if (!find_and_remove(numbers, guess)) {
+            print_failure(numbers, guess);
+            break;
+        }
+        
+        print_success(numbers);
+        if (numbers.size() == 0) {
+            break;
+        }
+    }
+
+    return 0;
 }
