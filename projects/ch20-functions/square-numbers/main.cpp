@@ -22,6 +22,8 @@ Numbers generate_numbers(int start, int count, int multiplier) {
     return numbers;
 }
 
+
+// Asks the user to input starting number, then generates array of numbers
 Numbers setup_game() {
     int start {};
     std::cout << "Start where? ";
@@ -39,4 +41,18 @@ Numbers setup_game() {
               << "?\n";
 
     return generate_numbers(start, count, multiplier);
+}
+
+// Returns the user's guess
+int get_user_guess() {
+    int guess {};
+
+    std::cout << "> ";
+    std::cin >> guess;
+
+    return guess;
+}
+
+int main() {
+    
 }
