@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm> // for std::find, std::min_element
+#include <cmath> // for std::abs
 #include "Random.h"
 
 using Numbers = std::vector<int>;
@@ -22,7 +23,6 @@ Numbers generate_numbers(int start, int count, int multiplier) {
 
     return numbers;
 }
-
 
 // Asks the user to input starting number, then generates array of numbers
 Numbers setup_game() {
@@ -79,6 +79,22 @@ void print_success(const Numbers& numbers) {
     }
 }
 
+// Finds the value in "numbers" that is closest to "guess"
+int find_closest_number(const Numbers& numbers, int guess) {
+    return *std::min_element(numbers.begin(), numbers.end(), 
+    [=](int a, int b) {
+        return std::abs(a - guess) < std::abs(b - guess);
+    });
+}
+
+// Called when the user guesses a number that's not in the numbers
+void print_failure(const Numbers& numbers, int guess) {
+    int closest { find_closest_number(numbers, guess) };
+
+    std::cout << guess << " is wrong!\n";
+
+    std::cout << "Try " << closest << " next time.\n";
+}
+
 int main() {
-    
 }
