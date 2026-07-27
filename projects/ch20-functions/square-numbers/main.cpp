@@ -67,6 +67,18 @@ bool find_and_remove(Numbers& numbers, int guess) {
     return true;
 }
 
+// Called when the user guesses a number correctly
+void print_success(const Numbers& numbers) {
+    std::cout << "Nice! ";
+
+    if (numbers.size() == 0) {
+        std::cout << "You found all numbers, good job!\n";
+    }
+    else {
+        std::cout << numbers.size() << " number(s) left.\n";
+    }
+}
+
 int main() {
     
 }
