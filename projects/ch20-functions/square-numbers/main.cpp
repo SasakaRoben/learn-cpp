@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <algorithm> // for std::find, std::min_element
 #include "Random.h"
 
 using Numbers = std::vector<int>;
@@ -51,6 +52,19 @@ int get_user_guess() {
     std::cin >> guess;
 
     return guess;
+}
+
+// Searches for the value "guess" in "numbers" and removes it.
+// Returns true if the value was found. False otherwise.
+bool find_and_remove(Numbers& numbers, int guess) {
+    auto found { std::find(numbers.begin(), numbers.end(), guess) };
+
+    if (found == numbers.end()) {
+        return false;
+    }
+
+    numbers.erase(found);
+    return true;
 }
 
 int main() {
