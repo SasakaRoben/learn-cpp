@@ -29,7 +29,6 @@ public:
     }
 
     void print() {
-        reduce();
         std::cout << m_numerator << "/" << m_denominator << "\n";
     } 
 
@@ -39,6 +38,7 @@ public:
     friend Fraction operator*(const Fraction& f1, const Fraction& f2);
 	friend Fraction operator*(const Fraction& f1, int value);
 	friend Fraction operator*(int value, const Fraction& f1);
+    friend std::ostream& operator<< (std::ostream& out, const Fraction& frac);
 };
 
 Fraction operator*(const Fraction& f1, const Fraction& f2) {
@@ -52,6 +52,11 @@ Fraction operator*(const Fraction& f1, int value) {
 
 Fraction operator*(int value, const Fraction& f1) {
 	return Fraction { f1 * value };
+}
+
+std::ostream& operator<< (std::ostream& out, const Fraction& frac) {
+
+    out << frac.m_numerator << "/" << frac.m_denominator;
 }
 
 int main() {
