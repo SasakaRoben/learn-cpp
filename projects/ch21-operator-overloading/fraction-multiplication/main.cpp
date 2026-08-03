@@ -7,7 +7,7 @@ private:
     int m_denominator {};
 
 public:
-    explicit Fraction(int numerator, int denominator=1)
+    explicit Fraction(int numerator=0, int denominator=1)
         : m_numerator { numerator }
         , m_denominator { denominator }
     {
@@ -38,7 +38,8 @@ public:
     friend Fraction operator*(const Fraction& f1, const Fraction& f2);
 	friend Fraction operator*(const Fraction& f1, int value);
 	friend Fraction operator*(int value, const Fraction& f1);
-    friend std::ostream& operator<< (std::ostream& out, const Fraction& frac);
+    friend std::ostream& operator<< (std::ostream& out, const Fraction& f);
+    friend std::istream& operator>> (std::istream& out, Fraction& f);
 };
 
 Fraction operator*(const Fraction& f1, const Fraction& f2) {
@@ -54,29 +55,43 @@ Fraction operator*(int value, const Fraction& f1) {
 	return Fraction { f1 * value };
 }
 
-std::ostream& operator<< (std::ostream& out, const Fraction& frac) {
+std::ostream& operator<< (std::ostream& out, const Fraction& f) {
+    out << f.m_numerator << "/" << f.m_denominator;
 
-    out << frac.m_numerator << "/" << frac.m_denominator;
+    return out;
+}
+
+std::istream& operator>> (std::istream& in, Fraction& f) {
+    int numerator {};
+    char ignore {};
+    int denominator {};
+
+    in >> numerator >> ignore >> denominator;
+
+    // If our denominator is semantically invalid, set failure mode manually
+    if (denominator == 0) { 
+        in.setstate(std::ios_base::failbit);
+    }
+
+    // If we're not in failure mode, update our object to the extracted values
+    if (in) {
+        f = Fraction{numerator, denominator};
+    }
+
+    return in;
 }
 
 int main() {
-    Fraction f1{2, 5};
-    f1.print();
+    Fraction f1 {};
+    std::cout << "Enter fraction 1: ";
+    std::cin >> f1;
 
-    Fraction f2{3, 8};
-    f2.print();
+    Fraction f2 {};
+    std::cout << "Enter fraction 2: ";
+    std::cin >> f2;
 
-    Fraction f3{ f1 * f2 };
-    f3.print();
-
-    Fraction f4{ f1 * 2 };
-    f4.print();
-
-    Fraction f5{ 2 * f2 };
-    f5.print();
-
-    Fraction f6{ Fraction{1, 2} * Fraction{2, 3} * Fraction{3, 4} };
-    f6.print();
+    // note: The result of f1 * f2 is an r-value
+    std::cout << f1 << " * " << f2 << " is " << f1 * f2 << '\n';
 
     return 0;
 }
