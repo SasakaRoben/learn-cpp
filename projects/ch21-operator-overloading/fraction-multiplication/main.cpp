@@ -1,4 +1,5 @@
 #include <iostream>
+#include <numeric>
 
 class Fraction {
 private:
@@ -9,9 +10,26 @@ public:
     explicit Fraction(int numerator, int denominator=1)
         : m_numerator { numerator }
         , m_denominator { denominator }
-    {}
+    {
+        // We put reduce() in the constructor to ensure any fractions we make
+        // get reduced!
+        // Since all of the overloaded operators create new Fractions, we can
+        // guarantee this will get called here
+        reduce();
+    }
 
-    void print() const {
+    void reduce () {
+        int gcd{ std::gcd(m_numerator, m_denominator) };
+
+        // Make sure we don't try to divide by 0
+		if (gcd) {
+			m_numerator /= gcd;
+			m_denominator /= gcd;
+		}
+    }
+
+    void print() {
+        reduce();
         std::cout << m_numerator << "/" << m_denominator << "\n";
     } 
 
