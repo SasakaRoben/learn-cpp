@@ -16,20 +16,21 @@ public:
         return out;
     }
 
-    MyString operator()(int start, int length) {
+    std::string_view operator()(int start, int length) {
         assert(start >= 0);
         assert(start + length <= static_cast<int>(m_string.length()) && 
                 "MyString::operator(int, int): Substring is out of range");
-        
-        return MyString { m_string.substr(
-            static_cast<std::string::size_type>(start),
-            static_cast<std::string::size_type>(length)
-        )};
+
+        // Create a std::string_view of m_string, so we can use
+        // std::string_view::substr() instead of std::string::substr()
+        return std::string_view { m_string }.substr(
+            static_cast<std::string_view::size_type>(start),
+            static_cast<std::string_view::size_type>(length)
+        );
     }
 };
 
-int main()
-{
+int main() {
     MyString s { "Hello, world!" };
     std::cout << s(7, 5) << '\n'; // start at index 7 and return 5 characters
 
