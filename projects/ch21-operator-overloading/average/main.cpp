@@ -18,14 +18,15 @@ public:
         return out;
     }
 
-    
+    // Because operator+= modifies its left operand, we'll write it as a member
+    Average& operator+=(std::int32_t num) {
+        m_total += num;
+        ++m_numbers;
 
-
-
+        // Return *this in case someone wants to chain +='s together
+        return *this;
+    }
 };
-
-
-
 
 int main() {
 	Average avg{};
