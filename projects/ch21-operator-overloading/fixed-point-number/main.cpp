@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cassert>
-
+#include <cmath>
 class FixedPoint2 {
 private:
 	std::int16_t m_base {};
@@ -31,6 +31,15 @@ public:
 		m_base += m_decimal / 100;  // integer division
 		m_decimal = m_decimal % 100; // integer remainder
 	}
+	
+	// We'll delegate to the prior constructor so we don't have to duplicated 
+	// the negative number and overflow handling logic
+	FixedPoint2(double d) :
+		FixedPoint2(
+			static_cast<std::int16_t>(std::trunc(d)),
+			static_cast<std::int8_t>(std::round(d * 100) - std::trunc(d) * 100)
+		)
+	{}
 
 	explicit operator double() const {
 		return m_base + (static_cast<double>(m_decimal) / 100);
@@ -58,23 +67,29 @@ bool testDecimal(const FixedPoint2 &fp)
 
 int main()
 {
-	FixedPoint2 a{ 1, 104 };
+	FixedPoint2 a{ 0.01 };
 	std::cout << a << '\n';
-	std::cout << static_cast<double>(a) << '\n';
-	assert(static_cast<double>(a) == 2.04);
-	assert(testDecimal(a));
+	assert(static_cast<double>(a) == 0.01);
 
-	FixedPoint2 b{ 1, -104 };
-	assert(static_cast<double>(b) == -2.04);
-	assert(testDecimal(b));
+	FixedPoint2 b{ -0.01 };
+	assert(static_cast<double>(b) == -0.01);
 
-	FixedPoint2 c{ -1, 104 };
-	assert(static_cast<double>(c) == -2.04);
-	assert(testDecimal(c));
+	FixedPoint2 c{ 1.9 }; // make sure we handle single digit decimal
+	assert(static_cast<double>(c) == 1.9);
 
-	FixedPoint2 d{ -1, -104 };
-	assert(static_cast<double>(d) == -2.04);
-	assert(testDecimal(d));
+	FixedPoint2 d{ 5.01 }; // stored as 5.0099999... so we'll need to round this
+	assert(static_cast<double>(d) == 5.01);
+
+	FixedPoint2 e{ -5.01 }; // stored as -5.0099999... so we'll need to round this
+	assert(static_cast<double>(e) == -5.01);
+
+	// Handle case where the argument's decimal rounds to 100 (need to increase base by 1)
+	FixedPoint2 f { 106.9978 }; // should be stored with base 107 and decimal 0
+	assert(static_cast<double>(f) == 107.0);
+
+	// Handle case where the argument's decimal rounds to -100 (need to decrease base by 1)
+	FixedPoint2 g { -106.9978 }; // should be stored with base -107 and decimal 0
+	assert(static_cast<double>(g) == -107.0);
 
 	return 0;
 }
