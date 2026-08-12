@@ -1,5 +1,8 @@
 #include <iostream>
 
+// Increase amount of new lines if your board isn't 
+// at the very bottom of the console
+constexpr int g_console_lines { 25 };
 class Tile {
 private:
     int m_num { 0 };
@@ -35,14 +38,44 @@ std::ostream& operator<<(std::ostream& stream, Tile tile) {
     return stream;
 }
 
-int main() {
-    Tile tile1{ 10 };
-    Tile tile2{ 8 };
-    Tile tile3{ 0 }; // the missing tile
-    Tile tile4{ 1 };
+class Board {
+private:
+    static constexpr int s_size { 4 };
+    Tile m_tiles[s_size][s_size] {
+        Tile {1}, Tile {2}, Tile {3}, Tile {4},
+        Tile {5}, Tile {6}, Tile {7}, Tile {8},
+        Tile {9}, Tile {10}, Tile {11}, Tile {12},
+        Tile {13}, Tile {14}, Tile {15}, Tile {0}
+    };
 
-    std::cout << "0123456789ABCDEF\n"; // to make it easy to see how many spaces are in the next line
-    std::cout << tile1 << tile2 << tile3 << tile4 << '\n';
+public:
+    Board() = default;
 
+    friend std::ostream& operator<<(std::ostream& stream, const Board& board) {
+        // Before drawing, always print some empty lines
+        // so that only one board appears at a time
+        // and it's always shown at the bottom of the window
+        // because console window scrolls automatically when there is no
+        // enough space
+        for (int i = 0; i < g_console_lines; ++i) {
+            std::cout << '\n';
+        }
 
+        for (int y = 0; y < s_size; ++y) {
+            for (int x = 0; x < s_size; ++x) {
+                stream << board.m_tiles[y][x];
+            }
+            stream << '\n';
+        }
+
+        return stream;
+    }
+};
+
+int main()
+{
+    Board board{};
+    std::cout << board;
+
+    return 0;
 }
