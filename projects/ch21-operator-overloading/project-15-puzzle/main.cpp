@@ -226,6 +226,16 @@ public:
         std::swap(m_tiles[pt1.y][pt1.x], m_tiles[pt2.y][pt2.x]);
     }
 
+    // Compare two boards to see if they are equal
+    friend bool operator==(const Board& f1, const Board& f2) {
+        for (int y = 0; y < s_size; ++y)
+            for (int x = 0; x < s_size; ++x)
+                if (f1.m_tiles[y][x].get_num() != f2.m_tiles[y][x].get_num())
+                    return false;
+
+        return true;
+    }
+
     // Returns true if user moved successfully
     bool move_tile(Direction dir) {
         Point empty_tile { get_empty_tile_pos() };
@@ -239,15 +249,32 @@ public:
         return true;
     }
 
+    bool player_won() const {
+        static Board s_solved {}; // generate a solved board
+        return s_solved == *this; // player wins if current board == solved one
+    }
+
+    void randomize() {
+        // Move empty tile randomly 1000 times
+        // (Just like you would do in real life)
+        for (int i { 0 }; i < 1000; ) {
+            // If we are able to successfully move a tile, count this
+            if (move_tile(Direction::get_random_direction())) {
+                ++i;
+            }
+        }
+    }
+
 };
 
 int main()
 {
     Board board{};
+    board.randomize();
     std::cout << board;
 
-    std::cout << "Enter a command: ";
-    while (true)
+    // std::cout << "Enter a command: ";
+    while (!board.player_won())
     {
         char ch{ UserInput::get_command_from_user() };
 
