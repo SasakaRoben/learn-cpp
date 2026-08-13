@@ -1,5 +1,6 @@
 #include <iostream>
 #include <limits>
+#include <array>
 #include <cassert>
 #include "Random.h"
 
@@ -199,20 +200,71 @@ public:
             stream << '\n';
         }
 
+
         return stream;
     }
+
+    Point get_empty_tile_pos() const {
+        for (int y { 0 }; y < s_size; ++y) {
+            for (int x { 0 }; x < s_size; ++x) {
+                if (m_tiles[y][x].is_empty()) {
+                    return { x,y };
+                }
+            }
+        }
+
+        assert(0 && "There is no empty tile in the board!!!");
+        return { -1,-1 };
+    }
+
+    static bool is_valid_tile_pos(Point pt) {
+        return (pt.x >= 0 && pt.x < s_size)
+            && (pt.y >= 0 && pt.y < s_size);
+    }
+
+    void swap_tiles(Point pt1, Point pt2) {
+        std::swap(m_tiles[pt1.y][pt1.x], m_tiles[pt2.y][pt2.x]);
+    }
+
+    // Returns true if user moved successfully
+    bool move_tile(Direction dir) {
+        Point empty_tile { get_empty_tile_pos() };
+        Point adj { empty_tile.get_adjacent_point(-dir) };
+        
+        if (!is_valid_tile_pos(adj)) {
+            return false;
+        }
+
+        swap_tiles(adj, empty_tile);
+        return true;
+    }
+
 };
 
 int main()
 {
-    std::cout << std::boolalpha;
-    std::cout << (Point{ 1, 1 }.get_adjacent_point(Direction::up)    == Point{ 1, 0 }) << '\n';
-    std::cout << (Point{ 1, 1 }.get_adjacent_point(Direction::down)  == Point{ 1, 2 }) << '\n';
-    std::cout << (Point{ 1, 1 }.get_adjacent_point(Direction::left)  == Point{ 0, 1 }) << '\n';
-    std::cout << (Point{ 1, 1 }.get_adjacent_point(Direction::right) == Point{ 2, 1 }) << '\n';
-    std::cout << (Point{ 1, 1 } != Point{ 2, 1 }) << '\n';
-    std::cout << (Point{ 1, 1 } != Point{ 1, 2 }) << '\n';
-    std::cout << !(Point{ 1, 1 } != Point{ 1, 1 }) << '\n';
+    Board board{};
+    std::cout << board;
+
+    std::cout << "Enter a command: ";
+    while (true)
+    {
+        char ch{ UserInput::get_command_from_user() };
+
+        // Handle non-direction commands
+        if (ch == 'q')
+        {
+            std::cout << "\n\nBye!\n\n";
+            return 0;
+        }
+
+        // Handle direction commands
+        Direction dir{ UserInput::char_to_direction(ch) };
+
+        bool userMoved { board.move_tile(dir) };
+        if (userMoved)
+            std::cout << board;
+    }
 
     return 0;
 }
