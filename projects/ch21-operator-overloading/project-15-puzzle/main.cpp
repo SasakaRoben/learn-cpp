@@ -61,6 +61,32 @@ std::ostream& operator<<(std::ostream& stream, Direction dir) {
     return (stream << "Unknown direction");
 }
 
+struct Point {
+    int x {};
+    int y {};
+
+    friend bool operator==(Point p1, Point p2) {
+        return p1.x == p2.x && p1.y == p2.y;
+    }
+
+    friend bool operator!=(Point p1, Point p2) {
+        return !(p1 == p2);
+    }
+
+    Point get_adjacent_point(Direction dir) const {
+        switch(dir.get_type()) {
+            case Direction::up:     return Point{ x,     y - 1 };
+            case Direction::down:   return Point{ x,     y + 1 };
+            case Direction::left:   return Point{ x - 1, y };
+            case Direction::right:  return Point{ x + 1, y };
+            default:                break;
+        }
+
+        assert(0 && "Unsupported direction was passed!");
+        return *this;
+    }
+};
+
 namespace UserInput {
     bool is_valid_command(char ch) {
         return ch == 'w'
@@ -150,6 +176,12 @@ private:
 public:
     Board() = default;
 
+    static void print_empty_lines(int count) {
+        for (int i = 0; i < count; ++i)
+            std::cout << '\n';
+    }
+
+
     friend std::ostream& operator<<(std::ostream& stream, const Board& board) {
         // Before drawing, always print some empty lines
         // so that only one board appears at a time
@@ -173,31 +205,14 @@ public:
 
 int main()
 {
-    Board board{};
-    std::cout << board;
-
-    std::cout << "Generating random direction... " << Direction::get_random_direction() << '\n';
-    std::cout << "Generating random direction... " << Direction::get_random_direction() << '\n';
-    std::cout << "Generating random direction... " << Direction::get_random_direction() << '\n';
-    std::cout << "Generating random direction... " << Direction::get_random_direction() << "\n\n";
-
-    std::cout << "Enter a command: ";
-    while (true)
-    {
-        char ch{ UserInput::get_command_from_user() };
-
-        // Handle non-direction commands
-        if (ch == 'q')
-        {
-            std::cout << "\n\nBye!\n\n";
-            return 0;
-        }
-
-        // Handle direction commands
-        Direction dir{ UserInput::char_to_direction(ch) };
-
-        std::cout << "You entered direction: " << dir << '\n';
-    }
+    std::cout << std::boolalpha;
+    std::cout << (Point{ 1, 1 }.get_adjacent_point(Direction::up)    == Point{ 1, 0 }) << '\n';
+    std::cout << (Point{ 1, 1 }.get_adjacent_point(Direction::down)  == Point{ 1, 2 }) << '\n';
+    std::cout << (Point{ 1, 1 }.get_adjacent_point(Direction::left)  == Point{ 0, 1 }) << '\n';
+    std::cout << (Point{ 1, 1 }.get_adjacent_point(Direction::right) == Point{ 2, 1 }) << '\n';
+    std::cout << (Point{ 1, 1 } != Point{ 2, 1 }) << '\n';
+    std::cout << (Point{ 1, 1 } != Point{ 1, 2 }) << '\n';
+    std::cout << !(Point{ 1, 1 } != Point{ 1, 1 }) << '\n';
 
     return 0;
 }
